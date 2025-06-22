@@ -3,69 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Recibo de Pago</title>
+  <title>Generador de Recibos</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB7qP5sU7s0LgGTTx3NmE1dQOSy59MvQuA&libraries=places"></script>
 </head>
 <body>
   <header>
-    <h1>Generador de Recibos</h1>
+    <h1>🧾 Generador de Recibos</h1>
   </header>
   <main>
-    <section class="formulario">
+    <form id="reciboForm">
       <h2>Datos del Recibo</h2>
-      <form id="reciboForm">
-        <input type="text" id="nombre" placeholder="Nombre del Cliente" required />
-        <input type="text" id="concepto" placeholder="Concepto" required />
-        <input type="number" id="monto" placeholder="Monto" required />
-        <input type="date" id="fecha" required />
+      <input type="text" id="nombre" placeholder="Nombre del Cliente" required />
+      <input type="text" id="concepto" placeholder="Concepto" required />
+      <input type="number" id="monto" placeholder="Monto" required />
+      <input type="date" id="fecha" required />
 
-        <label>Forma de pago:</label>
-        <select id="formaPago" required>
-          <option value="Efectivo">Efectivo</option>
-          <option value="Transferencia">Transferencia</option>
-          <option value="Con seña">Con seña</option>
-        </select>
-        <label><input type="checkbox" id="conSena" /> ¿Fue con seña?</label>
+      <label>Forma de pago:</label>
+      <select id="formaPago" required>
+        <option value="Efectivo">Efectivo</option>
+        <option value="Transferencia">Transferencia</option>
+        <option value="Con seña">Con seña</option>
+      </select>
+      <input type="text" id="montoSena" placeholder="Monto de la seña (si aplica)" />
 
-        <label>Dirección:</label>
-        <input type="text" id="direccionManual" placeholder="Dirección o enlace de Google Maps" />
-        <button type="button" id="getUbicacion">Usar ubicación automática</button>
+      <label>Dirección:</label>
+      <input type="text" id="direccion" placeholder="Buscar dirección" />
+      <div id="mapa"></div>
 
-        <input type="text" id="cuit" placeholder="CUIT / CUIL" />
-
-        <label>Color del Recibo:</label>
-        <input type="color" id="colorRecibo" />
-
-        <label>Marca de Agua (Texto):</label>
-        <input type="text" id="marcaAgua" placeholder="Texto de marca de agua" />
-
-        <label><input type="checkbox" id="checkFirmaCliente" checked /> Incluir firma del cliente</label>
-        <div id="bloqueFirmaCliente">
-          <label>Firma del Cliente:</label>
-          <canvas id="firmaCliente" width="350" height="150"></canvas>
-          <button type="button" id="limpiarFirmaCliente">Limpiar Firma</button>
-        </div>
-
-        <button type="submit">Generar Recibo</button>
-      </form>
-    </section>
-
-    <section class="firma-usuario">
-      <h2>Firma Digital del Usuario (Empresa)</h2>
+      <label><input type="checkbox" id="firmaClienteToggle" /> Incluir firma del cliente</label>
       <canvas id="firmaUsuario" width="300" height="100"></canvas>
-      <button id="guardarFirmaUsuario">Guardar Firma</button>
-      <button id="limpiarFirmaUsuario">Limpiar</button>
-    </section>
+      <canvas id="firmaCliente" width="300" height="100" class="oculto"></canvas>
 
-    <section class="resultado">
-      <h2>Recibo Generado</h2>
-      <div id="vistaPrevia"></div>
-      <button id="descargarPDF">Descargar PDF</button>
-      <button id="enviarWhatsApp">Enviar por WhatsApp</button>
-    </section>
+      <label>Color del Recibo:</label>
+      <input type="color" id="colorRecibo" />
+
+      <button type="submit">Generar Recibo</button>
+    </form>
+
+    <section class="resultado" id="resultado"></section>
   </main>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
