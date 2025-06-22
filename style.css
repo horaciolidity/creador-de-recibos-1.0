@@ -82,7 +82,6 @@ canvas {
   background-size: 100% 40px;
 }
 .marca-agua {
-  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -90,15 +89,6 @@ canvas {
   height: 100%;
   pointer-events: none;
   z-index: 0;
-  background-image: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.04) 0,
-    rgba(0, 0, 0, 0.04) 20px,
-    transparent 20px,
-    transparent 80px
-  );
-  background-size: 100% 60px;
-  background-repeat: repeat-y;
   text-align: center;
   font-size: 1.2em;
   font-weight: bold;
@@ -106,6 +96,5 @@ canvas {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   white-space: pre;
+  color: #000;
 }
-
-
