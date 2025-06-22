@@ -33,6 +33,18 @@ function initMap() {
   });
 }
 
+function limpiarFirma(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+
+
+
+
+
+
 function habilitarFirma(canvas) {
   const ctx = canvas.getContext("2d");
   let dibujando = false;
@@ -108,6 +120,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const visible = firmaClienteToggle.checked;
     firmaClienteCanvas.classList.toggle("oculto", !visible);
     firmaClienteTexto.classList.toggle("oculto", !visible);
+    document.getElementById("limpiarFirmaCliente").classList.toggle("oculto", !visible);
+
   });
 
   habilitarFirma(firmaUsuarioCanvas);
@@ -154,17 +168,17 @@ document.addEventListener("DOMContentLoaded", () => {
 `;
 
 
-    document.getElementById("descargarPDF").addEventListener("click", () => {
-      const recibo = document.getElementById("recibo");
-      html2canvas(recibo, { scale: 2 }).then(canvas => {
-        const img = canvas.toDataURL("image/png");
-        const pdf = new jspdf.jsPDF("p", "mm", "a4");
-        const imgProps = pdf.getImageProperties(img);
-        const pdfWidth = 210;
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-        pdf.addImage(img, "PNG", 0, 0, pdfWidth, pdfHeight);
-        pdf.save("recibo.pdf");
-      });
-    });
+   document.getElementById("descargarPDF").addEventListener("click", () => {
+  const recibo = document.getElementById("recibo");
+  html2canvas(recibo, { scale: 2 }).then(canvas => {
+    const img = canvas.toDataURL("image/jpeg", 1.0);
+    const pdf = new jspdf.jsPDF("p", "mm", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = (canvas.height * pageWidth) / canvas.width;
+    pdf.addImage(img, "JPEG", 0, 0, pageWidth, pageHeight);
+    pdf.save("recibo.pdf"); // descarga directa
+  });
+});
+
   });
 });
