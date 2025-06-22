@@ -123,29 +123,36 @@ document.addEventListener("DOMContentLoaded", () => {
       monto: document.getElementById("monto").value,
       fecha: document.getElementById("fecha").value,
       formaPago: document.getElementById("formaPago").value,
+      empresa: document.getElementById("empresa").value,
+      cuit: document.getElementById("cuit").value,
+      telefono: document.getElementById("telefono").value,
+      email: document.getElementById("email").value,
+
       sena: document.getElementById("montoSena").value,
       direccion: document.getElementById("direccion").value,
       incluirFirmaCliente: firmaClienteToggle.checked,
       color: document.getElementById("colorRecibo").value
+      
     };
 
-    const resultado = document.getElementById("resultado");
-    resultado.innerHTML = `
-      <div id="recibo" style="padding:2rem;background:${datos.color};position:relative;overflow:hidden;">
-        <div class="marca-agua"></div>
-        <h2 style="margin-top:0;">Recibo de Pago</h2>
-        <p><strong>${datos.nombre}</strong></p>
-        <p>${datos.concepto}</p>
-        <p>$${datos.monto}</p>
-        <p>${datos.fecha}</p>
-        <p>${datos.formaPago}</p>
-        ${datos.formaPago === "Con seña" ? `<p>Seña: $${datos.sena}</p>` : ""}
-        <p>${datos.direccion}</p>
-        <div style="margin-top:1rem;"><strong>Firma Usuario:</strong><br><img src="${firmaUsuarioCanvas.toDataURL()}"/></div>
-        ${datos.incluirFirmaCliente ? `<div style="margin-top:1rem;"><strong>Firma Cliente:</strong><br><img src="${firmaClienteCanvas.toDataURL()}"/></div>` : ""}
-      </div>
-      <button id="descargarPDF">Descargar PDF</button>
-    `;
+ resultado.innerHTML = `
+  <div id="recibo" style="padding:2rem;background:${datos.color};position:relative;overflow:hidden;">
+    <div class="marca-agua" style="content: '${datos.empresa}';">${datos.empresa}</div>
+    <h2 style="margin-top:0;">Recibo de Pago</h2>
+    <p><strong>${datos.nombre}</strong></p>
+    <p>${datos.concepto}</p>
+    <p>$${datos.monto}</p>
+    <p>${datos.fecha}</p>
+    <p>${datos.formaPago}</p>
+    ${datos.formaPago === "Con seña" ? `<p>Seña: $${datos.sena}</p>` : ""}
+    <p>${datos.direccion}</p>
+    <p><strong>${datos.empresa}</strong> | CUIT: ${datos.cuit} | ${datos.telefono || ""} ${datos.email ? "| " + datos.email : ""}</p>
+    <div style="margin-top:1rem;"><strong>Firma Usuario:</strong><br><img src="${firmaUsuarioCanvas.toDataURL()}"/></div>
+    ${datos.incluirFirmaCliente ? `<div style="margin-top:1rem;"><strong>Firma Cliente:</strong><br><img src="${firmaClienteCanvas.toDataURL()}"/></div>` : ""}
+  </div>
+  <button id="descargarPDF">Descargar PDF</button>
+`;
+
 
     document.getElementById("descargarPDF").addEventListener("click", () => {
       const recibo = document.getElementById("recibo");
