@@ -18,7 +18,7 @@ main {
   margin: auto;
 }
 
-form input, form label, button {
+form input, form select, form label, button {
   display: block;
   width: 100%;
   margin-bottom: 1rem;
@@ -29,6 +29,7 @@ form input, form label, button {
 canvas {
   border: 1px solid #ccc;
   background: white;
+  width: 100%;
 }
 
 button {
