@@ -132,16 +132,21 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
 
     const datos = {
-      nombre: document.getElementById("nombre").value,
-      concepto: document.getElementById("concepto").value,
-      monto: document.getElementById("monto").value,
-      fecha: document.getElementById("fecha").value,
-      formaPago: document.getElementById("formaPago").value,
-      empresa: document.getElementById("empresa").value,
-      cuit: document.getElementById("cuit").value,
-      telefono: document.getElementById("telefono").value,
-      email: document.getElementById("email").value,
-      marcaAgua: document.getElementById("marcaAguaTexto").value,
+    nombre: document.getElementById("nombre").value,
+    concepto: document.getElementById("concepto").value,
+    monto: document.getElementById("monto").value,
+    fecha: document.getElementById("fecha").value,
+    formaPago: document.getElementById("formaPago").value,
+    empresa: document.getElementById("empresa").value,
+    cuit: document.getElementById("cuit").value,
+    telefono: document.getElementById("telefono").value,
+    email: document.getElementById("email").value,
+    marcaAgua: document.getElementById("marcaAguaTexto").value,
+    sena: document.getElementById("montoSena").value,
+    direccion: document.getElementById("direccion").value,
+    incluirFirmaCliente: firmaClienteToggle.checked,
+    color: document.getElementById("colorRecibo").value
+      
 
 
       sena: document.getElementById("montoSena").value,
@@ -150,11 +155,12 @@ document.addEventListener("DOMContentLoaded", () => {
       color: document.getElementById("colorRecibo").value
       
     };
+  const marcaAguaRepetida = new Array(100).fill(datos.marcaAgua).join(" ");
 
 resultado.innerHTML = `
   <div id="recibo" style="position:relative; background:${datos.color}; padding:2rem; font-family:'Segoe UI', sans-serif;">
 
-    <div class="marca-agua-fondo">${datos.marcaAgua}</div>
+    <div class="marca-agua-fondo">${marcaAguaRepetida}</div>
 
     <h2 style="margin-top:0;">RECIBO DE PAGO</h2>
     <p><strong>Cliente:</strong> ${datos.nombre}</p>
@@ -177,15 +183,28 @@ resultado.innerHTML = `
 
 
 
-   document.getElementById("descargarPDF").addEventListener("click", () => {
+  document.getElementById("descargarPDF").addEventListener("click", () => {
   const recibo = document.getElementById("recibo");
   html2canvas(recibo, { scale: 2 }).then(canvas => {
     const img = canvas.toDataURL("image/jpeg", 1.0);
     const pdf = new jspdf.jsPDF("p", "mm", "a4");
     const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = (canvas.height * pageWidth) / canvas.width;
-    pdf.addImage(img, "JPEG", 0, 0, pageWidth, pageHeight);
-    pdf.save("recibo.pdf"); // descarga directa
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    const imgProps = {
+      width: canvas.width,
+      height: canvas.height
+    };
+
+    const ratio = Math.min(pageWidth / imgProps.width, pageHeight / imgProps.height);
+    const imgWidth = imgProps.width * ratio;
+    const imgHeight = imgProps.height * ratio;
+
+    const x = (pageWidth - imgWidth) / 2;
+    const y = (pageHeight - imgHeight) / 2;
+
+    pdf.addImage(img, "JPEG", x, y, imgWidth, imgHeight);
+    pdf.save("recibo.pdf");
   });
 });
 
