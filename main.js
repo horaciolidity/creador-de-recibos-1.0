@@ -1,32 +1,21 @@
-let mapa, marcador, geocoder, autocomplete;
+let mapa, marcador;
 
 function initMap() {
-  const mapaElemento = document.getElementById("mapa");
-  mapa = new google.maps.Map(mapaElemento, {
-    center: { lat: -34.6, lng: -58.4 },
-    zoom: 14
-  });
+  mapa = L.map('mapa').setView([-34.6, -58.4], 13);
 
-  geocoder = new google.maps.Geocoder();
-  const input = document.getElementById("direccion");
-  autocomplete = new google.maps.places.Autocomplete(input);
-  autocomplete.bindTo("bounds", mapa);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(mapa);
 
-  mapa.addListener("click", function(event) {
-    geocoder.geocode({ location: event.latLng }, (results, status) => {
-      if (status === "OK" && results[0]) {
-        input.value = results[0].formatted_address;
-        colocarMarcador(event.latLng);
-      }
-    });
-  });
-}
-
-function colocarMarcador(ubicacion) {
-  if (marcador) marcador.setMap(null);
-  marcador = new google.maps.Marker({
-    position: ubicacion,
-    map: mapa
+  mapa.on('click', function(e) {
+    const latlng = e.latlng;
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`)
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("direccion").value = data.display_name || `${latlng.lat}, ${latlng.lng}`;
+        if (marcador) mapa.removeLayer(marcador);
+        marcador = L.marker([latlng.lat, latlng.lng]).addTo(mapa);
+      });
   });
 }
 
@@ -34,21 +23,63 @@ function habilitarFirma(canvas) {
   const ctx = canvas.getContext("2d");
   let dibujando = false;
 
-  canvas.addEventListener("mousedown", (e) => {
+  const iniciarDibujo = (x, y) => {
     dibujando = true;
     ctx.beginPath();
-    ctx.moveTo(e.offsetX, e.offsetY);
-  });
+    ctx.moveTo(x, y);
+  };
 
-  canvas.addEventListener("mousemove", (e) => {
-    if (dibujando) {
-      ctx.lineTo(e.offsetX, e.offsetY);
-      ctx.stroke();
+  const trazar = (x, y) => {
+    if (!dibujando) return;
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  };
+
+  const detener = () => {
+    dibujando = false;
+  };
+
+  const getXY = (e, canvas) => {
+    const rect = canvas.getBoundingClientRect();
+    if (e.touches) {
+      return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top
+      };
+    } else {
+      return {
+        x: e.offsetX,
+        y: e.offsetY
+      };
     }
+  };
+
+  canvas.addEventListener("mousedown", e => {
+    const { x, y } = getXY(e, canvas);
+    iniciarDibujo(x, y);
   });
 
-  canvas.addEventListener("mouseup", () => { dibujando = false; });
-  canvas.addEventListener("mouseleave", () => { dibujando = false; });
+  canvas.addEventListener("mousemove", e => {
+    const { x, y } = getXY(e, canvas);
+    trazar(x, y);
+  });
+
+  canvas.addEventListener("mouseup", detener);
+  canvas.addEventListener("mouseleave", detener);
+
+  canvas.addEventListener("touchstart", e => {
+    e.preventDefault();
+    const { x, y } = getXY(e, canvas);
+    iniciarDibujo(x, y);
+  });
+
+  canvas.addEventListener("touchmove", e => {
+    e.preventDefault();
+    const { x, y } = getXY(e, canvas);
+    trazar(x, y);
+  });
+
+  canvas.addEventListener("touchend", detener);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
