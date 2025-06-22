@@ -41,6 +41,15 @@
       <label><input type="checkbox" id="firmaClienteToggle" /> Incluir firma del cliente</label>
       <p>Firma del Usuario:</p>
       <canvas id="firmaUsuario" width="300" height="100"></canvas>
+
+<div>
+  <button type="button" onclick="limpiarFirma('firmaUsuario')">🧹 Limpiar Firma Usuario</button>
+</div>
+<div class="oculto" id="limpiarFirmaCliente">
+  <button type="button" onclick="limpiarFirma('firmaCliente')">🧹 Limpiar Firma Cliente</button>
+</div>
+
+      
       <p class="oculto" id="firmaClienteTexto">Firma del Cliente:</p>
       <canvas id="firmaCliente" width="300" height="100" class="oculto"></canvas>
 
