@@ -3,26 +3,58 @@ const firmaUsuarioCanvas = document.getElementById("firmaUsuario");
 const firmaClienteCanvas = document.getElementById("firmaCliente");
 const firmaUsuarioCtx = firmaUsuarioCanvas.getContext("2d");
 const firmaClienteCtx = firmaClienteCanvas.getContext("2d");
-let dibujandoUsuario = false;
-let dibujandoCliente = false;
 
-function iniciarDibujo(ctx, e) {
-  ctx.beginPath();
-  ctx.moveTo(e.offsetX, e.offsetY);
+function habilitarFirma(canvas, ctx) {
+  let dibujando = false;
+
+  function getXY(e) {
+    const rect = canvas.getBoundingClientRect();
+    if (e.touches) {
+      return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top
+      };
+    } else {
+      return {
+        x: e.offsetX,
+        y: e.offsetY
+      };
+    }
+  }
+
+  function comenzar(e) {
+    e.preventDefault();
+    dibujando = true;
+    const { x, y } = getXY(e);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  }
+
+  function trazar(e) {
+    if (!dibujando) return;
+    e.preventDefault();
+    const { x, y } = getXY(e);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  }
+
+  function finalizar() {
+    dibujando = false;
+  }
+
+  // Soporte mouse
+  canvas.addEventListener("mousedown", comenzar);
+  canvas.addEventListener("mousemove", trazar);
+  canvas.addEventListener("mouseup", finalizar);
+
+  // Soporte touch
+  canvas.addEventListener("touchstart", comenzar);
+  canvas.addEventListener("touchmove", trazar);
+  canvas.addEventListener("touchend", finalizar);
 }
 
-function dibujar(ctx, e) {
-  ctx.lineTo(e.offsetX, e.offsetY);
-  ctx.stroke();
-}
-
-firmaUsuarioCanvas.addEventListener("mousedown", e => { dibujandoUsuario = true; iniciarDibujo(firmaUsuarioCtx, e); });
-firmaUsuarioCanvas.addEventListener("mousemove", e => { if (dibujandoUsuario) dibujar(firmaUsuarioCtx, e); });
-firmaUsuarioCanvas.addEventListener("mouseup", () => { dibujandoUsuario = false; });
-
-firmaClienteCanvas.addEventListener("mousedown", e => { dibujandoCliente = true; iniciarDibujo(firmaClienteCtx, e); });
-firmaClienteCanvas.addEventListener("mousemove", e => { if (dibujandoCliente) dibujar(firmaClienteCtx, e); });
-firmaClienteCanvas.addEventListener("mouseup", () => { dibujandoCliente = false; });
+habilitarFirma(firmaUsuarioCanvas, firmaUsuarioCtx);
+habilitarFirma(firmaClienteCanvas, firmaClienteCtx);
 
 // Guardar firma del usuario
 document.getElementById("guardarFirmaUsuario").onclick = () => {
@@ -31,8 +63,11 @@ document.getElementById("guardarFirmaUsuario").onclick = () => {
   alert("Firma del usuario guardada.");
 };
 
-document.getElementById("limpiarFirmaUsuario").onclick = () => firmaUsuarioCtx.clearRect(0, 0, firmaUsuarioCanvas.width, firmaUsuarioCanvas.height);
-document.getElementById("limpiarFirmaCliente").onclick = () => firmaClienteCtx.clearRect(0, 0, firmaClienteCanvas.width, firmaClienteCanvas.height);
+document.getElementById("limpiarFirmaUsuario").onclick = () =>
+  firmaUsuarioCtx.clearRect(0, 0, firmaUsuarioCanvas.width, firmaUsuarioCanvas.height);
+
+document.getElementById("limpiarFirmaCliente").onclick = () =>
+  firmaClienteCtx.clearRect(0, 0, firmaClienteCanvas.width, firmaClienteCanvas.height);
 
 // Generar recibo
 document.getElementById("reciboForm").addEventListener("submit", (e) => {
