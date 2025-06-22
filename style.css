@@ -1,98 +1,83 @@
 body {
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
-  background: #fdfaf5;
-  color: #444;
+  padding: 0;
+  background: #f9f7f4;
+  color: #333;
 }
 
 header {
-  background: linear-gradient(to right, #d8b4a0, #e9d5c0);
-  color: #333;
-  padding: 1rem;
+  background: linear-gradient(45deg, #cbbacc, #2580b3);
+  color: white;
+  padding: 2rem 1rem;
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 main {
-  padding: 1.5rem;
-  max-width: 850px;
+  padding: 2rem 1rem;
+  max-width: 900px;
   margin: auto;
-  background: #fffaf4;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.05);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.05);
+  position: relative;
 }
 
 form input, form select, form label, button {
   display: block;
   width: 100%;
   margin-bottom: 1rem;
-  padding: 0.6rem;
+  padding: 0.8rem;
   font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  background: #fefefe;
-}
-
-canvas {
   border: 1px solid #ccc;
-  background: white;
-  width: 100%;
-  border-radius: 6px;
+  border-radius: 8px;
+  background: #fafafa;
 }
 
 button {
-  background: #d4a373;
+  background: linear-gradient(to right, #6a11cb, #2575fc);
   color: white;
+  font-weight: bold;
   border: none;
+  border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s ease;
-  border-radius: 6px;
-  padding: 0.7rem;
 }
 
 button:hover {
-  background: #bc8b5e;
+  background: linear-gradient(to right, #5b0eaa, #1a5ee8);
+}
+
+#mapa {
+  height: 300px;
+  width: 100%;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+canvas {
+  border: 1px solid #aaa;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.oculto {
+  display: none;
 }
 
 .resultado {
   margin-top: 2rem;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.08);
-}
-
-#vistaPrevia {
-  padding: 1.5rem;
-  border: 1px solid #e0e0e0;
-  background: white;
-  margin-bottom: 1rem;
-  min-height: 200px;
-  border-radius: 8px;
-  position: relative;
-  overflow: hidden;
-}
-
-#vistaPrevia::before {
-  content: attr(data-marca);
-  position: absolute;
-  top: -100%;
-  left: 0;
-  width: 100%;
-  height: 300%;
-  color: rgba(200,200,200,0.15);
-  font-size: 3em;
-  white-space: pre;
-  transform: rotate(90deg);
-  animation: lluvia 10s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes lluvia {
-  0% { top: -100%; }
-  100% { top: 100%; }
-}
-
-.firma-usuario {
-  margin-top: 2rem;
+  padding: 2rem;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0,0,0,0.03),
+    rgba(0,0,0,0.03) 2px,
+    transparent 2px,
+    transparent 20px
+  );
+  background-size: 100% 40px;
 }
