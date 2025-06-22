@@ -22,6 +22,7 @@
       <input type="text" id="cuit" placeholder="CUIT/CUIL" required />
       <input type="text" id="telefono" placeholder="Teléfono de contacto" />
       <input type="text" id="email" placeholder="Email o página web" />
+      <input type="text" id="marcaAguaTexto" placeholder="Texto para la Marca de Agua" required />
 
       <h2>Datos del Recibo</h2>
       <input type="text" id="nombre" placeholder="Nombre del Cliente" />
@@ -40,13 +41,18 @@
       <div id="mapa"></div>
 
       <label><input type="checkbox" id="firmaClienteToggle" /> Incluir firma del cliente</label>
+      <p>Firma del Usuario:</p>
       <canvas id="firmaUsuario" width="300" height="100"></canvas>
       <button type="button" onclick="limpiarFirma('firmaUsuario')">Limpiar Firma</button>
+
+      <br><br>
+      <label for="colorRecibo">Color de fondo del recibo:</label>
+      <input type="color" id="colorRecibo" value="#fefefe" />
 
       <button type="submit">Generar Recibo</button>
     </form>
 
-    <div id="resultado" style="display:none;"></div>
+    <div id="resultado" style="margin-top: 2rem;"></div>
     <div id="marcaAgua"></div>
   </main>
 
