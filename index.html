@@ -6,6 +6,8 @@
   <title>Generador de Recibos</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB7qP5sU7s0LgGTTx3NmE1dQOSy59MvQuA&libraries=places"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
   <header>
@@ -32,7 +34,9 @@
       <div id="mapa"></div>
 
       <label><input type="checkbox" id="firmaClienteToggle" /> Incluir firma del cliente</label>
+      <p>Firma del Usuario:</p>
       <canvas id="firmaUsuario" width="300" height="100"></canvas>
+      <p class="oculto" id="firmaClienteTexto">Firma del Cliente:</p>
       <canvas id="firmaCliente" width="300" height="100" class="oculto"></canvas>
 
       <label>Color del Recibo:</label>
