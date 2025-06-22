@@ -18,8 +18,19 @@
         <input type="text" id="concepto" placeholder="Concepto" required>
         <input type="number" id="monto" placeholder="Monto" required>
         <input type="date" id="fecha" required>
-        <input type="text" id="formaPago" placeholder="Forma de Pago">
-        <input type="text" id="direccion" placeholder="Dirección">
+
+        <label>Forma de pago:</label>
+        <select id="formaPago" required>
+          <option value="Efectivo">Efectivo</option>
+          <option value="Transferencia">Transferencia</option>
+          <option value="Con seña">Con seña</option>
+        </select>
+        <label><input type="checkbox" id="conSena"> ¿Fue con seña?</label>
+
+        <label>Dirección:</label>
+        <input type="text" id="direccionManual" placeholder="Dirección o enlace de Google Maps">
+        <button type="button" id="getUbicacion">Usar ubicación automática</button>
+
         <input type="text" id="cuit" placeholder="CUIT / CUIL">
 
         <label>Color del Recibo:</label>
@@ -28,9 +39,12 @@
         <label>Marca de Agua (Texto):</label>
         <input type="text" id="marcaAgua" placeholder="Texto de marca de agua">
 
-        <label>Firma del Cliente:</label>
-        <canvas id="firmaCliente" width="300" height="100"></canvas>
-        <button type="button" id="limpiarFirmaCliente">Limpiar Firma</button>
+        <label><input type="checkbox" id="checkFirmaCliente" checked> Incluir firma del cliente</label>
+        <div id="bloqueFirmaCliente">
+          <label>Firma del Cliente:</label>
+          <canvas id="firmaCliente" width="350" height="150"></canvas>
+          <button type="button" id="limpiarFirmaCliente">Limpiar Firma</button>
+        </div>
 
         <button type="submit">Generar Recibo</button>
       </form>
