@@ -36,6 +36,7 @@
         <option value="Con seña">Con seña</option>
       </select>
       <input type="text" id="montoSena" placeholder="Monto de la seña (si aplica)" />
+      <input type="color" id="colorRecibo" value="#fefefe" />
 
       <input type="text" id="direccion" placeholder="Click en el mapa para seleccionar dirección o ingresarla" />
       <div id="mapa"></div>
@@ -44,10 +45,6 @@
       <p>Firma del Usuario:</p>
       <canvas id="firmaUsuario" width="300" height="100"></canvas>
       <button type="button" onclick="limpiarFirma('firmaUsuario')">Limpiar Firma</button>
-
-      <br><br>
-      <label for="colorRecibo">Color de fondo del recibo:</label>
-      <input type="color" id="colorRecibo" value="#fefefe" />
 
       <button type="submit">Generar Recibo</button>
     </form>
