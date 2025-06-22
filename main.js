@@ -7,6 +7,20 @@ function initMap() {
     attribution: '© OpenStreetMap contributors'
   }).addTo(mapa);
 
+  // Centrar en ubicación del usuario si se permite
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      const latlng = [pos.coords.latitude, pos.coords.longitude];
+      mapa.setView(latlng, 15);
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng[0]}&lon=${latlng[1]}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("direccion").value = data.display_name;
+          marcador = L.marker(latlng).addTo(mapa);
+        });
+    });
+  }
+
   mapa.on('click', function(e) {
     const latlng = e.latlng;
     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`)
@@ -117,15 +131,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const resultado = document.getElementById("resultado");
     resultado.innerHTML = `
-      <div id="recibo" style="padding:2rem;border:2px dashed ${datos.color};position:relative;">
-        <h2>Recibo de Pago</h2>
-        <p><strong>Cliente:</strong> ${datos.nombre}</p>
-        <p><strong>Concepto:</strong> ${datos.concepto}</p>
-        <p><strong>Monto:</strong> $${datos.monto}</p>
-        <p><strong>Fecha:</strong> ${datos.fecha}</p>
-        <p><strong>Forma de pago:</strong> ${datos.formaPago}</p>
-        ${datos.formaPago === "Con seña" ? `<p><strong>Seña:</strong> $${datos.sena}</p>` : ""}
-        <p><strong>Dirección:</strong> ${datos.direccion}</p>
+      <div id="recibo" style="padding:2rem;background:${datos.color};position:relative;overflow:hidden;">
+        <div class="marca-agua"></div>
+        <h2 style="margin-top:0;">Recibo de Pago</h2>
+        <p><strong>${datos.nombre}</strong></p>
+        <p>${datos.concepto}</p>
+        <p>$${datos.monto}</p>
+        <p>${datos.fecha}</p>
+        <p>${datos.formaPago}</p>
+        ${datos.formaPago === "Con seña" ? `<p>Seña: $${datos.sena}</p>` : ""}
+        <p>${datos.direccion}</p>
         <div style="margin-top:1rem;"><strong>Firma Usuario:</strong><br><img src="${firmaUsuarioCanvas.toDataURL()}"/></div>
         ${datos.incluirFirmaCliente ? `<div style="margin-top:1rem;"><strong>Firma Cliente:</strong><br><img src="${firmaClienteCanvas.toDataURL()}"/></div>` : ""}
       </div>
@@ -134,12 +149,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("descargarPDF").addEventListener("click", () => {
       const recibo = document.getElementById("recibo");
-      html2canvas(recibo).then(canvas => {
+      html2canvas(recibo, { scale: 2 }).then(canvas => {
         const img = canvas.toDataURL("image/png");
-        const pdf = new jspdf.jsPDF();
+        const pdf = new jspdf.jsPDF("p", "mm", "a4");
         const imgProps = pdf.getImageProperties(img);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        const pdfWidth = 210;
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
         pdf.addImage(img, "PNG", 0, 0, pdfWidth, pdfHeight);
         pdf.save("recibo.pdf");
       });
