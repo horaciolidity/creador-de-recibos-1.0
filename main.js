@@ -141,6 +141,8 @@ document.addEventListener("DOMContentLoaded", () => {
       cuit: document.getElementById("cuit").value,
       telefono: document.getElementById("telefono").value,
       email: document.getElementById("email").value,
+      marcaAgua: document.getElementById("marcaAguaTexto").value,
+
 
       sena: document.getElementById("montoSena").value,
       direccion: document.getElementById("direccion").value,
@@ -149,23 +151,30 @@ document.addEventListener("DOMContentLoaded", () => {
       
     };
 
- resultado.innerHTML = `
-  <div id="recibo" style="padding:2rem;background:${datos.color};position:relative;overflow:hidden;">
-    <div class="marca-agua" style="content: '${datos.empresa}';">${datos.empresa}</div>
-    <h2 style="margin-top:0;">Recibo de Pago</h2>
-    <p><strong>${datos.nombre}</strong></p>
-    <p>${datos.concepto}</p>
-    <p>$${datos.monto}</p>
-    <p>${datos.fecha}</p>
-    <p>${datos.formaPago}</p>
-    ${datos.formaPago === "Con seña" ? `<p>Seña: $${datos.sena}</p>` : ""}
-    <p>${datos.direccion}</p>
-    <p><strong>${datos.empresa}</strong> | CUIT: ${datos.cuit} | ${datos.telefono || ""} ${datos.email ? "| " + datos.email : ""}</p>
+resultado.innerHTML = `
+  <div id="recibo" style="position:relative; background:${datos.color}; padding:2rem; font-family:'Segoe UI', sans-serif;">
+
+    <div class="marca-agua-fondo">${datos.marcaAgua}</div>
+
+    <h2 style="margin-top:0;">RECIBO DE PAGO</h2>
+    <p><strong>Cliente:</strong> ${datos.nombre}</p>
+    <p><strong>Concepto:</strong> ${datos.concepto}</p>
+    <p><strong>Monto:</strong> $${datos.monto}</p>
+    <p><strong>Fecha:</strong> ${datos.fecha}</p>
+    <p><strong>Forma de pago:</strong> ${datos.formaPago}</p>
+    ${datos.formaPago === "Con seña" ? `<p><strong>Seña:</strong> $${datos.sena}</p>` : ""}
+    <p><strong>Dirección:</strong> ${datos.direccion}</p>
+    <hr>
+    <p><strong>Emitido por:</strong> ${datos.empresa}</p>
+    <p><strong>CUIT:</strong> ${datos.cuit}</p>
+    <p><strong>Teléfono:</strong> ${datos.telefono}</p>
+    <p><strong>Email:</strong> ${datos.email}</p>
     <div style="margin-top:1rem;"><strong>Firma Usuario:</strong><br><img src="${firmaUsuarioCanvas.toDataURL()}"/></div>
     ${datos.incluirFirmaCliente ? `<div style="margin-top:1rem;"><strong>Firma Cliente:</strong><br><img src="${firmaClienteCanvas.toDataURL()}"/></div>` : ""}
   </div>
   <button id="descargarPDF">Descargar PDF</button>
 `;
+
 
 
    document.getElementById("descargarPDF").addEventListener("click", () => {
