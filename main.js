@@ -1,5 +1,3 @@
-// main.js
-
 const firmaUsuarioCanvas = document.getElementById("firmaUsuario");
 const firmaClienteCanvas = document.getElementById("firmaCliente");
 const firmaUsuarioCtx = firmaUsuarioCanvas.getContext("2d");
@@ -54,6 +52,11 @@ function habilitarFirma(canvas, ctx) {
 habilitarFirma(firmaUsuarioCanvas, firmaUsuarioCtx);
 habilitarFirma(firmaClienteCanvas, firmaClienteCtx);
 
+// Firma cliente opcional
+document.getElementById("checkFirmaCliente").addEventListener("change", e => {
+  document.getElementById("bloqueFirmaCliente").style.display = e.target.checked ? "block" : "none";
+});
+
 document.getElementById("guardarFirmaUsuario").onclick = () => {
   const firma = firmaUsuarioCanvas.toDataURL();
   localStorage.setItem("firmaUsuario", firma);
@@ -66,35 +69,27 @@ document.getElementById("limpiarFirmaUsuario").onclick = () =>
 document.getElementById("limpiarFirmaCliente").onclick = () =>
   firmaClienteCtx.clearRect(0, 0, firmaClienteCanvas.width, firmaClienteCanvas.height);
 
-// Mostrar u ocultar firma cliente
-const checkFirmaCliente = document.getElementById("checkFirmaCliente");
-checkFirmaCliente.addEventListener("change", () => {
-  document.getElementById("bloqueFirmaCliente").style.display = checkFirmaCliente.checked ? 'block' : 'none';
-});
-
-// Mostrar input manual si geolocalización falla o se prefiere
-const ubicacionManual = document.getElementById("direccionManual");
-const btnUbicacion = document.getElementById("getUbicacion");
-btnUbicacion.addEventListener("click", () => {
+// Ubicación automática
+document.getElementById("getUbicacion").onclick = () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(pos => {
       const lat = pos.coords.latitude;
       const lng = pos.coords.longitude;
-      const mapLink = `https://maps.google.com/?q=${lat},${lng}`;
-      ubicacionManual.value = mapLink;
+      const link = `https://maps.google.com/?q=${lat},${lng}`;
+      document.getElementById("direccionManual").value = link;
     }, err => {
-      alert("No se pudo obtener la ubicación. Ingresala manualmente.");
+      alert("Error al obtener la ubicación. Escribe la dirección manualmente.");
     });
   } else {
-    alert("Tu navegador no soporta geolocalización");
+    alert("Tu navegador no permite geolocalización.");
   }
-});
+};
 
-// Generar recibo
-const form = document.getElementById("reciboForm");
-form.addEventListener("submit", (e) => {
+document.getElementById("reciboForm").addEventListener("submit", (e) => {
   e.preventDefault();
+
   const incluirFirmaCliente = document.getElementById("checkFirmaCliente").checked;
+  const conSena = document.getElementById("conSena").checked;
 
   const datos = {
     nombre: document.getElementById("nombre").value,
@@ -102,13 +97,13 @@ form.addEventListener("submit", (e) => {
     monto: document.getElementById("monto").value,
     fecha: document.getElementById("fecha").value,
     formaPago: document.getElementById("formaPago").value,
-    conSena: document.getElementById("conSena").checked,
     direccion: document.getElementById("direccionManual").value,
     cuit: document.getElementById("cuit").value,
     color: document.getElementById("colorRecibo").value,
     marcaAgua: document.getElementById("marcaAgua").value,
     firmaCliente: incluirFirmaCliente ? firmaClienteCanvas.toDataURL() : "",
-    firmaUsuario: localStorage.getItem("firmaUsuario") || ""
+    firmaUsuario: localStorage.getItem("firmaUsuario") || "",
+    conSena
   };
 
   localStorage.setItem("configColor", datos.color);
