@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Generador de Recibos</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB7qP5sU7s0LgGTTx3NmE1dQOSy59MvQuA&libraries=places"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
@@ -30,7 +31,7 @@
       <input type="text" id="montoSena" placeholder="Monto de la seña (si aplica)" />
 
       <label>Dirección:</label>
-      <input type="text" id="direccion" placeholder="Buscar dirección" />
+      <input type="text" id="direccion" placeholder="Click en el mapa para seleccionar dirección" readonly />
       <div id="mapa"></div>
 
       <label><input type="checkbox" id="firmaClienteToggle" /> Incluir firma del cliente</label>
