@@ -1,4 +1,5 @@
-// Firmas
+// main.js
+
 const firmaUsuarioCanvas = document.getElementById("firmaUsuario");
 const firmaClienteCanvas = document.getElementById("firmaCliente");
 const firmaUsuarioCtx = firmaUsuarioCanvas.getContext("2d");
@@ -42,12 +43,9 @@ function habilitarFirma(canvas, ctx) {
     dibujando = false;
   }
 
-  // Soporte mouse
   canvas.addEventListener("mousedown", comenzar);
   canvas.addEventListener("mousemove", trazar);
   canvas.addEventListener("mouseup", finalizar);
-
-  // Soporte touch
   canvas.addEventListener("touchstart", comenzar);
   canvas.addEventListener("touchmove", trazar);
   canvas.addEventListener("touchend", finalizar);
@@ -56,7 +54,6 @@ function habilitarFirma(canvas, ctx) {
 habilitarFirma(firmaUsuarioCanvas, firmaUsuarioCtx);
 habilitarFirma(firmaClienteCanvas, firmaClienteCtx);
 
-// Guardar firma del usuario
 document.getElementById("guardarFirmaUsuario").onclick = () => {
   const firma = firmaUsuarioCanvas.toDataURL();
   localStorage.setItem("firmaUsuario", firma);
@@ -69,20 +66,48 @@ document.getElementById("limpiarFirmaUsuario").onclick = () =>
 document.getElementById("limpiarFirmaCliente").onclick = () =>
   firmaClienteCtx.clearRect(0, 0, firmaClienteCanvas.width, firmaClienteCanvas.height);
 
+// Mostrar u ocultar firma cliente
+const checkFirmaCliente = document.getElementById("checkFirmaCliente");
+checkFirmaCliente.addEventListener("change", () => {
+  document.getElementById("bloqueFirmaCliente").style.display = checkFirmaCliente.checked ? 'block' : 'none';
+});
+
+// Mostrar input manual si geolocalización falla o se prefiere
+const ubicacionManual = document.getElementById("direccionManual");
+const btnUbicacion = document.getElementById("getUbicacion");
+btnUbicacion.addEventListener("click", () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      const mapLink = `https://maps.google.com/?q=${lat},${lng}`;
+      ubicacionManual.value = mapLink;
+    }, err => {
+      alert("No se pudo obtener la ubicación. Ingresala manualmente.");
+    });
+  } else {
+    alert("Tu navegador no soporta geolocalización");
+  }
+});
+
 // Generar recibo
-document.getElementById("reciboForm").addEventListener("submit", (e) => {
+const form = document.getElementById("reciboForm");
+form.addEventListener("submit", (e) => {
   e.preventDefault();
+  const incluirFirmaCliente = document.getElementById("checkFirmaCliente").checked;
+
   const datos = {
     nombre: document.getElementById("nombre").value,
     concepto: document.getElementById("concepto").value,
     monto: document.getElementById("monto").value,
     fecha: document.getElementById("fecha").value,
     formaPago: document.getElementById("formaPago").value,
-    direccion: document.getElementById("direccion").value,
+    conSena: document.getElementById("conSena").checked,
+    direccion: document.getElementById("direccionManual").value,
     cuit: document.getElementById("cuit").value,
     color: document.getElementById("colorRecibo").value,
     marcaAgua: document.getElementById("marcaAgua").value,
-    firmaCliente: firmaClienteCanvas.toDataURL(),
+    firmaCliente: incluirFirmaCliente ? firmaClienteCanvas.toDataURL() : "",
     firmaUsuario: localStorage.getItem("firmaUsuario") || ""
   };
 
@@ -98,28 +123,25 @@ document.getElementById("reciboForm").addEventListener("submit", (e) => {
       <p><strong>Concepto:</strong> ${datos.concepto}</p>
       <p><strong>Monto:</strong> $${datos.monto}</p>
       <p><strong>Fecha:</strong> ${datos.fecha}</p>
-      <p><strong>Forma de Pago:</strong> ${datos.formaPago}</p>
-      <p><strong>Dirección:</strong> ${datos.direccion}</p>
+      <p><strong>Forma de Pago:</strong> ${datos.formaPago}${datos.conSena ? " (con seña)" : ""}</p>
+      <p><strong>Dirección:</strong> <a href="${datos.direccion}" target="_blank">${datos.direccion}</a></p>
       <p><strong>CUIT/CUIL:</strong> ${datos.cuit}</p>
       <p><strong>Firma Usuario:</strong><br><img src="${datos.firmaUsuario}" style="width:150px"></p>
-      <p><strong>Firma Cliente:</strong><br><img src="${datos.firmaCliente}" style="width:150px"></p>
+      ${incluirFirmaCliente ? `<p><strong>Firma Cliente:</strong><br><img src="${datos.firmaCliente}" style="width:250px"></p>` : ""}
     </div>
   `;
 });
 
-// Descargar PDF
 document.getElementById("descargarPDF").onclick = () => {
   const element = document.getElementById("vistaPrevia");
   html2pdf().from(element).save("recibo.pdf");
 };
 
-// Enviar por WhatsApp
 document.getElementById("enviarWhatsApp").onclick = () => {
   const mensaje = encodeURIComponent("Hola, te comparto el recibo de tu operación. Puedes descargarlo como PDF.");
   window.open(`https://wa.me/?text=${mensaje}`, "_blank");
 };
 
-// Cargar config predeterminada
 window.addEventListener("DOMContentLoaded", () => {
   const color = localStorage.getItem("configColor");
   const marcaAgua = localStorage.getItem("configMarcaAgua");
