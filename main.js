@@ -176,25 +176,27 @@ resultado.innerHTML = `
 
 
 
-  document.getElementById("descargarPDF").addEventListener("click", () => {
+ document.getElementById("descargarPDF").addEventListener("click", () => {
   const recibo = document.getElementById("recibo");
-  html2canvas(recibo, { scale: 2 }).then(canvas => {
+
+  html2canvas(recibo, {
+    scale: 2,
+    useCORS: true,
+    allowTaint: true,
+    backgroundColor: null // así respeta el color del recibo
+  }).then(canvas => {
     const img = canvas.toDataURL("image/jpeg", 1.0);
     const pdf = new jspdf.jsPDF("p", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
 
-    const imgProps = {
-      width: canvas.width,
-      height: canvas.height
-    };
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
 
-    const ratio = Math.min(pageWidth / imgProps.width, pageHeight / imgProps.height);
-    const imgWidth = imgProps.width * ratio;
-    const imgHeight = imgProps.height * ratio;
+    const ratio = Math.min(pdfWidth / canvas.width, pdfHeight / canvas.height);
+    const imgWidth = canvas.width * ratio;
+    const imgHeight = canvas.height * ratio;
 
-    const x = (pageWidth - imgWidth) / 2;
-    const y = (pageHeight - imgHeight) / 2;
+    const x = (pdfWidth - imgWidth) / 2;
+    const y = (pdfHeight - imgHeight) / 2;
 
     pdf.addImage(img, "JPEG", x, y, imgWidth, imgHeight);
     pdf.save("recibo.pdf");
