@@ -131,30 +131,23 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const datos = {
-    nombre: document.getElementById("nombre").value,
-    concepto: document.getElementById("concepto").value,
-    monto: document.getElementById("monto").value,
-    fecha: document.getElementById("fecha").value,
-    formaPago: document.getElementById("formaPago").value,
-    empresa: document.getElementById("empresa").value,
-    cuit: document.getElementById("cuit").value,
-    telefono: document.getElementById("telefono").value,
-    email: document.getElementById("email").value,
-    marcaAgua: document.getElementById("marcaAguaTexto").value,
-    sena: document.getElementById("montoSena").value,
-    direccion: document.getElementById("direccion").value,
-    incluirFirmaCliente: firmaClienteToggle.checked,
-    color: document.getElementById("colorRecibo").value
-      
+   const datos = {
+  nombre: document.getElementById("nombre").value,
+  concepto: document.getElementById("concepto").value,
+  monto: document.getElementById("monto").value,
+  fecha: document.getElementById("fecha").value,
+  formaPago: document.getElementById("formaPago").value,
+  empresa: document.getElementById("empresa").value,
+  cuit: document.getElementById("cuit").value,
+  telefono: document.getElementById("telefono").value,
+  email: document.getElementById("email").value,
+  marcaAgua: document.getElementById("marcaAguaTexto").value,
+  sena: document.getElementById("montoSena").value,
+  direccion: document.getElementById("direccion").value,
+  incluirFirmaCliente: firmaClienteToggle.checked,
+  color: document.getElementById("colorRecibo").value
+};
 
-
-      sena: document.getElementById("montoSena").value,
-      direccion: document.getElementById("direccion").value,
-      incluirFirmaCliente: firmaClienteToggle.checked,
-      color: document.getElementById("colorRecibo").value
-      
-    };
   const marcaAguaRepetida = new Array(100).fill(datos.marcaAgua).join(" ");
 
 resultado.innerHTML = `
