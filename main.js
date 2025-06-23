@@ -176,29 +176,42 @@ resultado.innerHTML = `
 
 
 
- document.getElementById("descargarPDF").addEventListener("click", () => {
+document.getElementById("descargarPDF").addEventListener("click", () => {
   const recibo = document.getElementById("recibo");
 
   html2canvas(recibo, {
     scale: 2,
     useCORS: true,
-    allowTaint: true,
-    backgroundColor: null // así respeta el color del recibo
+    backgroundColor: null
   }).then(canvas => {
-    const img = canvas.toDataURL("image/jpeg", 1.0);
+    const imgData = canvas.toDataURL("image/jpeg", 1.0);
     const pdf = new jspdf.jsPDF("p", "mm", "a4");
 
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
 
-    const ratio = Math.min(pdfWidth / canvas.width, pdfHeight / canvas.height);
-    const imgWidth = canvas.width * ratio;
-    const imgHeight = canvas.height * ratio;
+    const imgWidth = pageWidth;
+    const imgHeight = canvas.height * (imgWidth / canvas.width);
 
-    const x = (pdfWidth - imgWidth) / 2;
-    const y = (pdfHeight - imgHeight) / 2;
+    let position = 0;
 
-    pdf.addImage(img, "JPEG", x, y, imgWidth, imgHeight);
+    // Si la altura del contenido es mayor que una hoja A4, agregamos páginas
+    if (imgHeight <= pageHeight) {
+      pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+    } else {
+      let heightLeft = imgHeight;
+
+      while (heightLeft > 0) {
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+        position -= pageHeight;
+
+        if (heightLeft > 0) {
+          pdf.addPage();
+        }
+      }
+    }
+
     pdf.save("recibo.pdf");
   });
 });
