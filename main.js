@@ -151,27 +151,180 @@ document.addEventListener("DOMContentLoaded", () => {
   const marcaAguaRepetida = new Array(100).fill(datos.marcaAgua).join(" ");
 
 resultado.innerHTML = `
-  <div id="recibo" style="position:relative; background:${datos.color}; padding:2rem; font-family:'Segoe UI', sans-serif;">
+ const numeroRecibo =
+document.getElementById("numeroRecibo").value;
 
-    <div class="marca-agua-fondo">${marcaAguaRepetida}</div>
+const hora =
+document.getElementById("hora").value;
 
-    <h2 style="margin-top:0;">RECIBO DE PAGO</h2>
-    <p><strong>Cliente:</strong> ${datos.nombre}</p>
-    <p><strong>Concepto:</strong> ${datos.concepto}</p>
-    <p><strong>Monto:</strong> $${datos.monto}</p>
-    <p><strong>Fecha:</strong> ${datos.fecha}</p>
-    <p><strong>Forma de pago:</strong> ${datos.formaPago}</p>
-    ${datos.formaPago === "Con seña" ? `<p><strong>Seña:</strong> $${datos.sena}</p>` : ""}
-    <p><strong>Dirección:</strong> ${datos.direccion}</p>
-    <hr>
-    <p><strong>Emitido por:</strong> ${datos.empresa}</p>
-    <p><strong>CUIT:</strong> ${datos.cuit}</p>
-    <p><strong>Teléfono:</strong> ${datos.telefono}</p>
-    <p><strong>Email:</strong> ${datos.email}</p>
-    <div style="margin-top:1rem;"><strong>Firma Usuario:</strong><br><img src="${firmaUsuarioCanvas.toDataURL()}"/></div>
-    ${datos.incluirFirmaCliente ? `<div style="margin-top:1rem;"><strong>Firma Cliente:</strong><br><img src="${firmaClienteCanvas.toDataURL()}"/></div>` : ""}
-  </div>
-  <button id="descargarPDF">Descargar PDF</button>
+const tipoDocumento =
+document.getElementById("tipoDocumento").value;
+
+const logoEmpresa =
+document.getElementById("logoEmpresa").value;
+
+const origen =
+document.getElementById("origen").value;
+
+const destino =
+document.getElementById("destino").value;
+
+const pasajeros =
+document.getElementById("pasajeros").value;
+
+const observaciones =
+document.getElementById("observaciones").value;
+
+resultado.innerHTML = `
+
+<div id="recibo">
+
+<div class="marca-agua-fondo">
+${datos.marcaAgua}
+</div>
+
+<div class="encabezado-recibo">
+
+<div>
+
+${logoEmpresa
+? `<img src="${logoEmpresa}" class="logo">`
+: ""}
+
+<div class="empresa">
+${datos.empresa}
+</div>
+
+<div>
+CUIT: ${datos.cuit}
+</div>
+
+<div>
+${datos.telefono}
+</div>
+
+<div>
+${datos.email}
+</div>
+
+</div>
+
+<div class="numero">
+
+${tipoDocumento}
+
+<br><br>
+
+N° ${numeroRecibo}
+
+<br>
+
+${datos.fecha}
+
+<br>
+
+${hora}
+
+</div>
+
+</div>
+
+<h2>DATOS DEL CLIENTE</h2>
+
+<p><b>Cliente:</b> ${datos.nombre}</p>
+
+<p><b>Dirección:</b> ${datos.direccion}</p>
+
+<h2>DETALLE</h2>
+
+<table class="tabla">
+
+<tr>
+<th>Concepto</th>
+<th>Monto</th>
+</tr>
+
+<tr>
+<td>${datos.concepto}</td>
+<td>$${datos.monto}</td>
+</tr>
+
+${
+datos.formaPago === "Con seña"
+?
+`
+<tr>
+<td>Seña</td>
+<td>$${datos.sena}</td>
+</tr>
+`
+:
+""
+}
+
+</table>
+
+<h2>DATOS DEL VIAJE</h2>
+
+<p>
+<b>Origen:</b> ${origen}
+</p>
+
+<p>
+<b>Destino:</b> ${destino}
+</p>
+
+<p>
+<b>Pasajeros:</b> ${pasajeros}
+</p>
+
+<p>
+<b>Observaciones:</b>
+${observaciones}
+</p>
+
+<div class="total">
+TOTAL $${datos.monto}
+</div>
+
+<div class="firmas">
+
+<div class="firma">
+
+<img src="${firmaUsuarioCanvas.toDataURL()}">
+
+<div class="linea-firma"></div>
+
+Responsable
+
+</div>
+
+${
+datos.incluirFirmaCliente
+?
+`
+<div class="firma">
+
+<img src="${firmaClienteCanvas.toDataURL()}">
+
+<div class="linea-firma"></div>
+
+Cliente
+
+</div>
+`
+:
+""
+}
+
+</div>
+
+</div>
+
+<button id="descargarPDF">
+Descargar PDF
+</button>
+
 `;
 
 
