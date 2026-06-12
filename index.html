@@ -1,240 +1,226 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Factura Profesional - Agencia de Viajes</title>
 
-  <title>Generador de Recibos Profesional</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-  <link rel="stylesheet" href="style.css">
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:#eef2f7;
+    margin:0;
+    padding:20px;
+}
 
-  <link rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+.card{
+    max-width:1000px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.1);
+}
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+h1{
+    text-align:center;
+    color:#003366;
+}
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+input{
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    width:100%;
+    box-sizing:border-box;
+}
+
+button{
+    margin-top:20px;
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:#003366;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#004e9f;
+}
+
+#qrcode{
+    display:none;
+}
+</style>
 </head>
-
 <body>
 
-  <header>
-    <h1>🧾 Generador de Recibos Profesional</h1>
-  </header>
+<div class="card">
 
-  <main>
+<h1>Factura / Recibo Profesional</h1>
 
-    <form id="reciboForm">
+<div class="grid">
+<input id="empresa" placeholder="Nombre Agencia">
+<input id="cuit" placeholder="CUIT">
 
-      <h2>Datos de la Empresa</h2>
+<input id="factura" placeholder="Factura Nº">
+<input id="fecha" type="date">
 
-      <input
-        type="text"
-        id="empresa"
-        placeholder="Nombre de la Empresa"
-        required>
+<input id="cliente" placeholder="Cliente">
+<input id="documento" placeholder="DNI/Pasaporte">
 
-      <input
-        type="text"
-        id="cuit"
-        placeholder="CUIT / CUIL"
-        required>
+<input id="origen" placeholder="Origen">
+<input id="destino" placeholder="Destino">
 
-      <input
-        type="text"
-        id="telefono"
-        placeholder="Teléfono">
+<input id="servicio" placeholder="Servicio">
+<input id="monto" placeholder="Monto">
 
-      <input
-        type="text"
-        id="email"
-        placeholder="Email o Web">
+</div>
 
-      <input
-        type="text"
-        id="marcaAguaTexto"
-        placeholder="Texto Marca de Agua"
-        value="PRESUPUESTO">
+<button onclick="generarPDF()">
+Descargar PDF Profesional
+</button>
 
-      <h2>Configuración Profesional</h2>
+<div id="qrcode"></div>
 
-      <input
-        type="text"
-        id="logoEmpresa"
-        placeholder="URL del logo (opcional)">
+</div>
 
-      <input
-        type="text"
-        id="numeroRecibo"
-        value="000001"
-        placeholder="Número de recibo">
+<script>
 
-      <input
-        type="time"
-        id="hora">
+async function generarPDF(){
 
-      <select id="tipoDocumento">
-        <option value="RECIBO">RECIBO</option>
-        <option value="PRESUPUESTO">PRESUPUESTO</option>
-        <option value="COMPROBANTE">COMPROBANTE</option>
-      </select>
+const { jsPDF } = window.jspdf;
+const pdf = new jsPDF();
 
-      <h2>Datos del Recibo</h2>
+const empresa=document.getElementById("empresa").value;
+const cuit=document.getElementById("cuit").value;
+const factura=document.getElementById("factura").value;
+const fecha=document.getElementById("fecha").value;
+const cliente=document.getElementById("cliente").value;
+const documento=document.getElementById("documento").value;
+const origen=document.getElementById("origen").value;
+const destino=document.getElementById("destino").value;
+const servicio=document.getElementById("servicio").value;
+const monto=document.getElementById("monto").value;
 
-      <input
-        type="text"
-        id="nombre"
-        placeholder="Nombre del Cliente">
+const qrContainer=document.getElementById("qrcode");
+qrContainer.innerHTML="";
 
-      <input
-        type="text"
-        id="concepto"
-        placeholder="Concepto"
-        required>
+new QRCode(qrContainer,{
+text:`Factura:${factura}|Cliente:${cliente}|Monto:${monto}`,
+width:120,
+height:120
+});
 
-      <input
-        type="number"
-        id="monto"
-        placeholder="Monto"
-        required>
+await new Promise(r=>setTimeout(r,500));
 
-      <input
-        type="date"
-        id="fecha"
-        required>
+const qrImg=qrContainer.querySelector("img");
 
-      <select id="formaPago" required>
+pdf.setFont("helvetica","bold");
+pdf.setFontSize(26);
+pdf.text(empresa || "AGENCIA DE VIAJES",20,20);
 
-        <option disabled selected>
-          Forma de pago
-        </option>
+pdf.setFontSize(12);
+pdf.text("FACTURA / RECIBO",150,20);
 
-        <option value="Efectivo">
-          Efectivo
-        </option>
+pdf.setDrawColor(0);
+pdf.line(20,28,190,28);
 
-        <option value="Transferencia">
-          Transferencia
-        </option>
+pdf.setTextColor(220,220,220);
+pdf.setFontSize(48);
+pdf.text("PAGADO",50,180,{angle:45});
 
-        <option value="Con seña">
-          Con seña
-        </option>
+pdf.setTextColor(0,0,0);
 
-      </select>
+pdf.setFontSize(12);
 
-      <input
-        type="text"
-        id="montoSena"
-        placeholder="Monto de la seña">
+pdf.text(`CUIT: ${cuit}`,20,40);
+pdf.text(`Factura Nº: ${factura}`,130,40);
 
-      <input
-        type="text"
-        id="direccion"
-        placeholder="Click en el mapa o escribir">
+pdf.text(`Fecha: ${fecha}`,20,50);
 
-      <h2>Datos del Viaje</h2>
+pdf.setFillColor(240,240,240);
+pdf.rect(20,60,170,28,"F");
 
-      <input
-        type="text"
-        id="origen"
-        placeholder="Origen">
+pdf.text(`Cliente: ${cliente}`,25,72);
+pdf.text(`Documento: ${documento}`,25,82);
 
-      <input
-        type="text"
-        id="destino"
-        placeholder="Destino">
+pdf.setFont("helvetica","bold");
 
-      <input
-        type="number"
-        id="pasajeros"
-        placeholder="Cantidad de pasajeros">
+pdf.rect(20,100,170,10);
+pdf.text("Detalle del Servicio",25,107);
 
-      <textarea
-        id="observaciones"
-        rows="4"
-        placeholder="Observaciones del viaje"></textarea>
+pdf.rect(20,110,120,20);
+pdf.rect(140,110,50,20);
 
-      <div id="mapa"></div>
+pdf.setFont("helvetica","normal");
 
-      <label>
-        <input
-          type="checkbox"
-          id="firmaClienteToggle">
-        Incluir firma del cliente
-      </label>
+pdf.text(
+`${servicio}
+${origen} → ${destino}`,
+25,
+118
+);
 
-      <p>Firma del Usuario:</p>
+pdf.text(`$ ${monto}`,155,120);
 
-      <canvas
-        id="firmaUsuario"
-        width="300"
-        height="100"></canvas>
+pdf.setFont("helvetica","bold");
+pdf.setFontSize(16);
 
-      <button
-        type="button"
-        onclick="limpiarFirma('firmaUsuario')">
+pdf.rect(120,145,70,15);
 
-        Limpiar Firma Usuario
+pdf.text(
+`TOTAL $ ${monto}`,
+128,
+155
+);
 
-      </button>
+if(qrImg){
 
-      <p
-        id="firmaClienteTexto"
-        class="oculto">
+pdf.addImage(
+qrImg.src,
+"PNG",
+20,
+150,
+35,
+35
+);
 
-        Firma del Cliente:
+pdf.setFontSize(8);
+pdf.text(
+"QR de validación",
+20,
+190
+);
+}
 
-      </p>
+pdf.setFontSize(10);
 
-      <canvas
-        id="firmaCliente"
-        class="oculto"
-        width="300"
-        height="100"></canvas>
+pdf.text(
+"Este comprobante acredita el pago del servicio turístico contratado.",
+20,
+210
+);
 
-      <button
-        id="limpiarFirmaCliente"
-        class="oculto"
-        type="button"
-        onclick="limpiarFirma('firmaCliente')">
+pdf.line(130,240,185,240);
+pdf.text("Firma y Sello",145,247);
 
-        Limpiar Firma Cliente
+pdf.save(`Factura_${factura || "0001"}.pdf`);
 
-      </button>
-
-      <br><br>
-
-      <label for="colorRecibo">
-
-        Color de fondo del recibo
-
-      </label>
-
-      <input
-        type="color"
-        id="colorRecibo"
-        value="#fdf9f3">
-
-      <button type="submit">
-
-        Generar Recibo
-
-      </button>
-
-    </form>
-
-    <div
-      id="resultado"
-      style="margin-top:2rem;">
-    </div>
-
-  </main>
-
-  <script src="main.js"></script>
+}
+</script>
 
 </body>
 </html>
