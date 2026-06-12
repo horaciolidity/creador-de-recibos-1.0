@@ -1,97 +1,240 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Generador de Recibos</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Generador de Recibos Profesional</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
+
 <body>
+
   <header>
-    <h1>🧾 Generador de Recibos</h1>
+    <h1>🧾 Generador de Recibos Profesional</h1>
   </header>
 
   <main>
+
     <form id="reciboForm">
+
       <h2>Datos de la Empresa</h2>
-      <input type="text" id="empresa" placeholder="Nombre de la Empresa" required />
-      <input type="text" id="cuit" placeholder="CUIT/CUIL" required />
-      <input type="text" id="telefono" placeholder="Teléfono de contacto" />
-      <input type="text" id="email" placeholder="Email o página web" />
-      <input type="text" id="marcaAguaTexto" placeholder="Texto para marca de agua" required />
+
+      <input
+        type="text"
+        id="empresa"
+        placeholder="Nombre de la Empresa"
+        required>
+
+      <input
+        type="text"
+        id="cuit"
+        placeholder="CUIT / CUIL"
+        required>
+
+      <input
+        type="text"
+        id="telefono"
+        placeholder="Teléfono">
+
+      <input
+        type="text"
+        id="email"
+        placeholder="Email o Web">
+
+      <input
+        type="text"
+        id="marcaAguaTexto"
+        placeholder="Texto Marca de Agua"
+        value="PRESUPUESTO">
 
       <h2>Configuración Profesional</h2>
 
-<input type="text" id="logoEmpresa"
-placeholder="URL del logo (opcional)" />
+      <input
+        type="text"
+        id="logoEmpresa"
+        placeholder="URL del logo (opcional)">
 
-<input type="time" id="hora" />
+      <input
+        type="text"
+        id="numeroRecibo"
+        value="000001"
+        placeholder="Número de recibo">
 
-<input type="text" id="numeroRecibo"
-placeholder="Número de recibo"
-value="000001" />
+      <input
+        type="time"
+        id="hora">
 
-<select id="tipoDocumento">
-  <option value="RECIBO">RECIBO</option>
-  <option value="PRESUPUESTO">PRESUPUESTO</option>
-  <option value="COMPROBANTE">COMPROBANTE</option>
-</select>
+      <select id="tipoDocumento">
+        <option value="RECIBO">RECIBO</option>
+        <option value="PRESUPUESTO">PRESUPUESTO</option>
+        <option value="COMPROBANTE">COMPROBANTE</option>
+      </select>
 
       <h2>Datos del Recibo</h2>
-      <input type="text" id="nombre" placeholder="Nombre del Cliente" />
-      <input type="text" id="concepto" placeholder="Concepto" required />
-      <input type="number" id="monto" placeholder="Monto" required />
-      <input type="date" id="fecha" required />
+
+      <input
+        type="text"
+        id="nombre"
+        placeholder="Nombre del Cliente">
+
+      <input
+        type="text"
+        id="concepto"
+        placeholder="Concepto"
+        required>
+
+      <input
+        type="number"
+        id="monto"
+        placeholder="Monto"
+        required>
+
+      <input
+        type="date"
+        id="fecha"
+        required>
+
       <select id="formaPago" required>
-        <option disabled selected>Forma de pago</option>
-        <option value="Efectivo">Efectivo</option>
-        <option value="Transferencia">Transferencia</option>
-        <option value="Con seña">Con seña</option>
+
+        <option disabled selected>
+          Forma de pago
+        </option>
+
+        <option value="Efectivo">
+          Efectivo
+        </option>
+
+        <option value="Transferencia">
+          Transferencia
+        </option>
+
+        <option value="Con seña">
+          Con seña
+        </option>
+
       </select>
-      <input type="text" id="montoSena" placeholder="Monto de la seña (si aplica)" />
-      <input type="text" id="direccion" placeholder="Click en el mapa o escribir" />
+
+      <input
+        type="text"
+        id="montoSena"
+        placeholder="Monto de la seña">
+
+      <input
+        type="text"
+        id="direccion"
+        placeholder="Click en el mapa o escribir">
+
       <h2>Datos del Viaje</h2>
 
-<input type="text"
-id="origen"
-placeholder="Origen" />
+      <input
+        type="text"
+        id="origen"
+        placeholder="Origen">
 
-<input type="text"
-id="destino"
-placeholder="Destino" />
+      <input
+        type="text"
+        id="destino"
+        placeholder="Destino">
 
-<input type="number"
-id="pasajeros"
-placeholder="Cantidad de pasajeros" />
+      <input
+        type="number"
+        id="pasajeros"
+        placeholder="Cantidad de pasajeros">
 
-<textarea
-id="observaciones"
-placeholder="Observaciones"></textarea>
+      <textarea
+        id="observaciones"
+        rows="4"
+        placeholder="Observaciones del viaje"></textarea>
+
       <div id="mapa"></div>
 
-      <label><input type="checkbox" id="firmaClienteToggle" /> Incluir firma del cliente</label>
-      <p>Firma del Usuario:</p>
-      <canvas id="firmaUsuario" width="300" height="100"></canvas>
-      <button type="button" onclick="limpiarFirma('firmaUsuario')">Limpiar Firma Usuario</button>
+      <label>
+        <input
+          type="checkbox"
+          id="firmaClienteToggle">
+        Incluir firma del cliente
+      </label>
 
-      <p id="firmaClienteTexto" class="oculto">Firma del Cliente:</p>
-      <canvas id="firmaCliente" class="oculto" width="300" height="100"></canvas>
-      <button id="limpiarFirmaCliente" class="oculto" type="button" onclick="limpiarFirma('firmaCliente')">Limpiar Firma Cliente</button>
+      <p>Firma del Usuario:</p>
+
+      <canvas
+        id="firmaUsuario"
+        width="300"
+        height="100"></canvas>
+
+      <button
+        type="button"
+        onclick="limpiarFirma('firmaUsuario')">
+
+        Limpiar Firma Usuario
+
+      </button>
+
+      <p
+        id="firmaClienteTexto"
+        class="oculto">
+
+        Firma del Cliente:
+
+      </p>
+
+      <canvas
+        id="firmaCliente"
+        class="oculto"
+        width="300"
+        height="100"></canvas>
+
+      <button
+        id="limpiarFirmaCliente"
+        class="oculto"
+        type="button"
+        onclick="limpiarFirma('firmaCliente')">
+
+        Limpiar Firma Cliente
+
+      </button>
 
       <br><br>
-      <label for="colorRecibo">Color de fondo del recibo:</label>
-      <input type="color" id="colorRecibo" value="#fdf9f3" />
 
-      <button type="submit">Generar Recibo</button>
+      <label for="colorRecibo">
+
+        Color de fondo del recibo
+
+      </label>
+
+      <input
+        type="color"
+        id="colorRecibo"
+        value="#fdf9f3">
+
+      <button type="submit">
+
+        Generar Recibo
+
+      </button>
+
     </form>
 
-    <div id="resultado" style="margin-top: 2rem;"></div>
+    <div
+      id="resultado"
+      style="margin-top:2rem;">
+    </div>
+
   </main>
 
   <script src="main.js"></script>
+
 </body>
 </html>
