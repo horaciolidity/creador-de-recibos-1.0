@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+
+
 body {
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
@@ -81,31 +84,98 @@ canvas {
   );
   background-size: 100% 40px;
 }
-.marca-agua-fondo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.06;
-  font-size: 2.2rem;
-  font-weight: bold;
-  color: #000;
-  white-space: nowrap;
-  transform: rotate(-45deg);
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0px,
-    transparent 40px,
-    rgba(0, 0, 0, 0.1) 40px,
-    rgba(0, 0, 0, 0.1) 60px
-  );
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+
+#recibo{
+    position:relative;
+    background:#fffef8;
+    border:2px solid #222;
+    padding:40px;
+    font-family:'Courier Prime', monospace;
+    overflow:hidden;
+
+    box-shadow:
+    0 0 25px rgba(0,0,0,.12),
+    inset 0 0 60px rgba(0,0,0,.03);
 }
 
+.encabezado-recibo{
+    display:flex;
+    justify-content:space-between;
+    border-bottom:3px double #000;
+    padding-bottom:20px;
+    margin-bottom:25px;
+}
+
+.logo{
+    max-width:100px;
+    max-height:100px;
+}
+
+.empresa{
+    font-size:28px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:2px;
+}
+
+.numero{
+    text-align:right;
+    font-weight:bold;
+}
+
+.tabla{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+.tabla th{
+    background:#111;
+    color:white;
+}
+
+.tabla th,
+.tabla td{
+    border:1px solid #333;
+    padding:12px;
+}
+
+.total{
+    text-align:right;
+    font-size:28px;
+    font-weight:bold;
+    margin-top:20px;
+}
+
+.firmas{
+    display:flex;
+    justify-content:space-between;
+    margin-top:80px;
+}
+
+.firma{
+    width:40%;
+    text-align:center;
+}
+
+.firma img{
+    max-width:220px;
+}
+
+.linea-firma{
+    border-top:1px solid #000;
+    margin-top:10px;
+}
+
+.marca-agua-fondo{
+    position:absolute;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:110px;
+    font-weight:bold;
+    opacity:.04;
+    transform:rotate(-35deg);
+    pointer-events:none;
+}
