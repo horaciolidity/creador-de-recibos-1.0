@@ -225,6 +225,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
       color:
         document.getElementById("colorRecibo").value
+
+      logoEmpresa:
+  document.getElementById("logoEmpresa").value,
+
+numeroRecibo:
+  document.getElementById("numeroRecibo").value,
+
+hora:
+  document.getElementById("hora").value,
+
+tipoDocumento:
+  document.getElementById("tipoDocumento").value,
+
+origen:
+  document.getElementById("origen").value,
+
+destino:
+  document.getElementById("destino").value,
+
+pasajeros:
+  document.getElementById("pasajeros").value,
+
+observaciones:
+  document.getElementById("observaciones").value,
     };
 
     const marcaAguaRepetida =
@@ -250,9 +274,19 @@ document.addEventListener("DOMContentLoaded", () => {
           ${marcaAguaRepetida}
         </div>
 
-        <h2 style="margin-top:0;">
-          RECIBO DE PAGO
-        </h2>
+       <h2 style="margin-top:0;">
+  ${datos.tipoDocumento}
+</h2>
+
+<p>
+  <strong>N°:</strong>
+  ${datos.numeroRecibo}
+</p>
+
+<p>
+  <strong>Hora:</strong>
+  ${datos.hora}
+</p>
 
         <p>
           <strong>Cliente:</strong>
